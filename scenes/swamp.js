@@ -1,12 +1,12 @@
-const { sleep, prompt } = require('../utils/input');
+const { sleep, w, prompt, sceneTitle } = require('../utils/input');
 
 async function swamp(player) {
-  console.log("=== The Swamp ===");
-  console.log("\nYou clamber onto a small, dry island by the Pontar, swarmed by mosquitoes and surrounded by shifting shadows.");
-  console.log("The Black Ones won’t come this way—they’ll stick to the roads.");
-  console.log("But how will you cross the river? It’s all mud, muck, and mystery from here.\n");
+  sceneTitle("The Swamp");
 
-  const decision = (await prompt("You are surrounded by swamp and the sun is setting. What will you do? ")).toLowerCase();
+  console.log(w(`Finally you can rest easy... Or at least rest... As mosquitoes buzz around your head and shadows move in the underbrush you clamber up onto an island of dry ground on the edge of the Pontar River. It’s not large but it’ll give you a bit of respite. The Black Ones shouldn’t be passing through here. They’ll take the clearer routes into Redania once they finish tearing Temeria apart. The question is: How to cross the Pontar? Aside from your island of dry dirt, the ground is all mud and fetid water. Who knows how deep the Pontar is... or what you might encounter crossing it. Maybe there’s a ferry still running? A bridge? Something?`, {width: 100}));
+  console.log("");
+
+  const decision = (await prompt(w("You are surrounded by swamp and the sun is setting. Will you investigate the <river>? <look> at your surroundings? Or something else? ", {width: 100, indent: ""}))).toLowerCase();
 
   if (decision.includes("river") || decision.includes("cross")) {
     console.log("\nYou decide to investigate the river. The ground is wet and soggy, evasion will prove difficult here.");

@@ -1,4 +1,4 @@
-const { prompt, sleep } = require('../utils/input');
+const { prompt, w, sleep, sceneTitle } = require('../utils/input');
 
 // TEMP Scoia'tael mock
 const scoiatael = {
@@ -6,69 +6,67 @@ const scoiatael = {
 };
 
 async function scoiataelEncounter(player) {
-    console.log("=== Scoia'tael Encounter ===\n");
-    let awareness = player.awareness() + player.modifier;
-    console.log(awareness);
+    sceneTitle("Scoia'tael Encounter");
+
+    const awareness = player.awareness() + player.modifier;
+    console.log(w(`You rolled a total of: ${awareness}`));
+
     if (awareness >= scoiatael.stealth()) {
-        console.log("You notice a group of Scoia'tael archers, they haven't seen you yet.")
-        const noticed = await prompt("Do you <attack>, <talk> or <sneak past>? ");
+        console.log(w("You notice a group of Scoia'tael archers in the distance. They haven't seen you yet."));
+        const noticed = await prompt(w("Do you <attack>, <talk>, or <sneak past>? "));
 
         if (noticed.includes("attack")) {
-            console.log(`\nYou draw your ${player.weapon} and ambush the elves!`);
+            console.log(w(`You draw your ${player.weapon} and ambush the elves!`));
             player.ambush = true;
             return "combatScoiatael";
         } else if (noticed.includes("sneak") || noticed.includes("avoid")) {
-            console.log("\nMoving swiftly and softly, you hurry past the elves.");
-            return "camp";
+            console.log(w("Moving swiftly and softly, you hurry past the elves."));
+            return "campAttackDay";
         } else if (noticed.includes("talk")) {
-            console.log("\nYou step into view, hands raised.");
+            console.log(w("You step into view, hands raised."));
             player.modifier = 2;
-            // Fall through to next encounter phase
+            // Fall through to encounter
         } else {
-            console.log("You hesitate, doing nothing...");
-            player.modifier += -3;
+            console.log(w("You hesitate, doing nothing..."));
+            player.modifier -= 3;
+            await sleep(1500);
             return await scoiataelEncounter(player);
         }
     } else {
-        console.log("As you push through a patch of reeds near the Pontar, a voice snarls:");
+        console.log(w("As you push through a patch of reeds near the Pontar, a voice snarls..."));
         await sleep(1500);
     }
 
     if (player.race === "human") {
-        console.log(`"That's far enough, dh'oine."`);
+        console.log(w(`"That's far enough, dh'oine."`));
     } else {
-        console.log(`"That's far enough, wanderer.`)
+        console.log(w(`"That's far enough, wanderer."`));
     }
+
     await sleep(1000);
-    console.log("Several armed elves emerge from the brush, bows trained on you.\n");
+    console.log(w("Several armed elves emerge from the brush, bows trained on you."));
     await sleep(1500);
+    console.log(w("Their leader, a sharp-eyed elf with a scar down his cheek, steps forward."));
+    console.log(w(`"What are you doing in Scoia'tael territory?"`));
 
-    console.log("Their leader, a sharp-eyed elf with a scar down his cheek, steps forward.");
-    console.log(`"What are you doing in Scoia'tael territory?"`);
+    const answer = await prompt(("Do you <explain> or <fight>? "));
 
-    const answer = await prompt("Do you [explain], [lie], or [fight]? ");
-
-    if (answer.includes("explain")) {
-        console.log("\nYou raise your hands and calmly explain your situation—just passing through, trying to avoid Nilfgaardian patrols.");
+    if (answer.includes("explain") || answer.includes("tell")) {
+        console.log(("You raise your hands and try to talk with the elves."));
         await sleep(1500);
-        console.log("The leader narrows his eyes, but lowers his bow slightly.");
-        console.log(`"Fine. But stay out of our way. If you're lying, you'll regret it."`);
-        return 'safePath'; // next scene or event
-
-    } else if (answer.includes("lie")) {
-        console.log("\nYou try to bluff your way through, claiming you're with the Nilfgaardians on a secret mission.");
-        await sleep(1500);
-        console.log("The Scoia'tael react instantly—one fires an arrow into the ground at your feet.");
-        console.log(`"Liar!" the leader hisses. "You're not leaving here."`);
-        return 'combatScoiatael'; // triggers a combat scene
-
+        console.log(("The leader narrows his eyes, but lowers his bow slightly."));
+        console.log((`"Fine. Speak."`));
+        await sleep(2500);
+        return 'meeting';
     } else if (answer.includes("fight")) {
-        console.log("\nWithout waiting, you draw steel.");
-        console.log("The Scoia'tael shout in their tongue and unleash arrows.");
-        return 'combatScoiatael'; // also triggers combat
+        console.log((`Without waiting, you draw your ${player.weapon}.`));
+        console.log(("The Scoia'tael shout in their tongue and unleash arrows."));
+        await sleep(2500);
+        return 'combatScoiatael';
     } else {
-        console.log("\nThey look confused by your response.");
-        return await scoiataelEncounter(player); // reprompt
+        console.log(("They look confused by your response."));
+        await sleep(2500);
+        return await scoiataelEncounter(player);
     }
 }
 

@@ -1,7 +1,9 @@
 const { prompt, close } = require('./utils/input');
 const intro = require('./scenes/intro');
 const swamp = require('./scenes/swamp');
-const scoiataelEncounter = require('./scenes/scoiataelEncounter')
+const scoiataelEncounter = require('./scenes/scoiataelEncounter');
+const meeting = require('./scenes/meeting');
+const swamp2 = require('./scenes/swamp2');
 
 // Player object
 let player = {
@@ -20,6 +22,8 @@ const scenes = {
   intro,
   swamp,
   scoiataelEncounter,
+  meeting,
+  swamp2,
   // camp, ferry, outcome will be added later
 };
 

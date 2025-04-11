@@ -1,4 +1,17 @@
 const readline = require('readline');
+const wrap = require("word-wrap");
+
+function w(str, indent = "  ", width = 100) {
+  return wrap(str, { width, indent });
+}
+
+function sceneTitle(title) {
+  console.clear();
+  const head = `=== ${title} ===`;
+  const pad = " ".repeat((100 - head.length) / 2);
+  console.log(pad + head);
+  console.log("");
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -21,6 +34,8 @@ function close() {
 
 module.exports = {
   sleep,
+  w,
   prompt,
+  sceneTitle,
   close
 };

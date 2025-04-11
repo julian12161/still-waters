@@ -1,0 +1,22 @@
+{
+  "name": "witcher-still-waters",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julian12161/still-waters.git"
+  },
+  "author": "julian12161",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julian12161/still-waters/issues"
+  },
+  "homepage": "https://github.com/julian12161/still-waters#readme",
+  "dependencies": {
+    "word-wrap": "^1.2.5"
+  }
+}
